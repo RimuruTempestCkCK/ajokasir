@@ -224,7 +224,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
   });
 
   return (
-    <div style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: 'calc(100vh - 170px)', display: 'flex', flexDirection: 'column' }}>
       
       {/* BARCODE SCANNER BANNER ROW */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>

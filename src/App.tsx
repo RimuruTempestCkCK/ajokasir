@@ -202,7 +202,7 @@ function App() {
               src={logo} 
               alt="AjoKasir Logo" 
               style={{
-                height: '32px',
+                height: '42px',
                 width: 'auto',
                 objectFit: 'contain',
                 userSelect: 'none',

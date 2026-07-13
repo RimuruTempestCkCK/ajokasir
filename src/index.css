@@ -589,7 +589,8 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 20px;
-  height: calc(100vh - 120px);
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
