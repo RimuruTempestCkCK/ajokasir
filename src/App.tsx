@@ -14,6 +14,7 @@ import { Laporan } from './pages/Laporan';
 import { Pengguna } from './pages/Pengguna';
 import { SettingsPage } from './pages/Settings';
 import { Profil } from './pages/Profil';
+import logo from './assets/logo.png';
 
 import {
   LayoutDashboard,
@@ -197,8 +198,17 @@ function App() {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div className="sidebar-logo">
-            <Store size={22} />
-            <span>AjoKasir</span>
+            <img 
+              src={logo} 
+              alt="AjoKasir Logo" 
+              style={{
+                height: '32px',
+                width: 'auto',
+                objectFit: 'contain',
+                userSelect: 'none',
+                pointerEvents: 'none'
+              }} 
+            />
           </div>
           <button 
             className="mobile-close-btn" 
@@ -251,8 +261,17 @@ function App() {
         </button>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Store size={20} color="var(--primary)" />
-          <strong style={{ fontSize: '16px', color: 'var(--ink)' }}>AjoKasir</strong>
+          <img 
+            src={logo} 
+            alt="AjoKasir Logo" 
+            style={{
+              height: '28px',
+              width: 'auto',
+              objectFit: 'contain',
+              userSelect: 'none',
+              pointerEvents: 'none'
+            }} 
+          />
         </div>
         
         <div style={{ width: '40px' }}></div> {/* Spacer for balance */}

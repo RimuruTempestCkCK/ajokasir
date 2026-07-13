@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { db } from '../db';
-import { ShoppingBag, Key, Mail, ShieldAlert } from 'lucide-react';
+import { Key, Mail, ShieldAlert } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 interface LoginProps {
   onLoginSuccess: () => void;
@@ -55,20 +56,20 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '56px',
-            height: '56px',
-            borderRadius: '9999px',
-            backgroundColor: '#fce8e6',
-            color: 'var(--primary)',
-            marginBottom: '12px'
-          }}>
-            <ShoppingBag size={28} />
-          </div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ink)' }}>AjoKasir</h1>
+          <img 
+            src={logo} 
+            alt="Logo AjoKasir" 
+            style={{
+              width: '160px',
+              height: 'auto',
+              maxHeight: '160px',
+              objectFit: 'contain',
+              marginBottom: '12px',
+              userSelect: 'none',
+              pointerEvents: 'none'
+            }}
+          />
+          {/* <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ink)' }}>AjoKasir</h1> */}
           <p style={{ fontSize: '14px', color: 'var(--mute)', marginTop: '4px' }}>
             Sistem Point of Sale & Manajemen Inventori
           </p>
