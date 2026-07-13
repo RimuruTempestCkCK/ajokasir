@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Profile } from '../db';
 import { Plus, Edit2, Trash2, X, Shield, Mail, User } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PenggunaProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -77,6 +78,7 @@ export const Pengguna: React.FC<PenggunaProps> = ({ userRole }) => {
     try {
       if (isEdit && activeId) {
         await db.updateUserRole(activeId, role);
+        showSuccessToast('Role pengguna berhasil diperbarui');
       } else {
         await db.createUser({
           email: email.trim(),
@@ -84,25 +86,34 @@ export const Pengguna: React.FC<PenggunaProps> = ({ userRole }) => {
           full_name: fullName.trim(),
           role
         }, password);
+        showSuccessToast('Pengguna baru berhasil ditambahkan');
       }
       setIsOpen(false);
       loadUsers();
     } catch (err: any) {
-      alert(err.message || 'Gagal menyimpan data pengguna');
+      showAlert('Gagal Menyimpan', err.message || 'Gagal menyimpan data pengguna', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (id === 'user-owner') {
-      alert('Owner utama tidak dapat dihapus');
+    if (id === 'user-owner' || users.find(u => u.id === id)?.role === 'owner') {
+      showAlert('Aksi Ditolak', 'Akun Owner utama tidak dapat dihapus dari sistem', 'warning');
       return;
     }
-    if (!window.confirm('Yakin ingin menghapus pengguna ini?')) return;
-    try {
-      await db.deleteUser(id);
-      loadUsers();
-    } catch (err) {
-      alert('Gagal menghapus pengguna');
+    const result = await showConfirm(
+      'Hapus Karyawan?',
+      'Apakah Anda yakin ingin menghapus akun pengguna ini?',
+      'Ya, Hapus',
+      'Batal'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.deleteUser(id);
+        loadUsers();
+        showSuccessToast('Pengguna berhasil dihapus');
+      } catch (err: any) {
+        showAlert('Gagal Menghapus', err.message || 'Gagal menghapus pengguna', 'error');
+      }
     }
   };
 

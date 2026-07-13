@@ -15,6 +15,7 @@ import { Pengguna } from './pages/Pengguna';
 import { SettingsPage } from './pages/Settings';
 import { Profil } from './pages/Profil';
 import logo from './assets/logo.png';
+import { showConfirm } from './utils/swal';
 
 import {
   LayoutDashboard,
@@ -110,7 +111,13 @@ function App() {
   };
 
   const handleLogout = async () => {
-    if (window.confirm('Keluar dari aplikasi AjoKasir?')) {
+    const result = await showConfirm(
+      'Keluar dari Aplikasi?',
+      'Apakah Anda yakin ingin keluar dari sesi AjoKasir saat ini?',
+      'Ya, Keluar',
+      'Batal'
+    );
+    if (result.isConfirmed) {
       await db.logout();
       setUser(null);
       setActivePage('dashboard');

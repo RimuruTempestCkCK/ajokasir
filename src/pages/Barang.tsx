@@ -10,6 +10,7 @@ import {
   Check, 
   AlertTriangle 
 } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface BarangProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -108,8 +109,9 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
       });
       setIsAddOpen(false);
       loadData();
+      showSuccessToast('Barang berhasil ditambahkan');
     } catch (err: any) {
-      alert(err.message || 'Gagal menambah barang');
+      showAlert('Gagal Menambah Barang', err.message || 'Terjadi kesalahan sistem', 'error');
     }
   };
 
@@ -128,8 +130,9 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
       });
       setIsEditOpen(false);
       loadData();
+      showSuccessToast('Barang berhasil diperbarui');
     } catch (err: any) {
-      alert(err.message || 'Gagal mengubah barang');
+      showAlert('Gagal Mengubah Barang', err.message || 'Terjadi kesalahan sistem', 'error');
     }
   };
 
@@ -145,18 +148,27 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
       );
       setIsOpnameOpen(false);
       loadData();
+      showSuccessToast('Stock opname berhasil disimpan');
     } catch (err: any) {
-      alert(err.message || 'Gagal melakukan Stock Opname');
+      showAlert('Gagal Stock Opname', err.message || 'Terjadi kesalahan sistem', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Apakah Anda yakin ingin menghapus barang ini?')) return;
-    try {
-      await db.deleteProduct(id);
-      loadData();
-    } catch (err: any) {
-      alert(err.message || 'Gagal menghapus barang');
+    const result = await showConfirm(
+      'Hapus Barang?',
+      'Apakah Anda yakin ingin menghapus barang ini secara permanen dari sistem?',
+      'Ya, Hapus',
+      'Batal'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.deleteProduct(id);
+        loadData();
+        showSuccessToast('Barang berhasil dihapus');
+      } catch (err: any) {
+        showAlert('Gagal Menghapus Barang', err.message || 'Terjadi kesalahan sistem', 'error');
+      }
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Category } from '../db';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface KategoriProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -70,23 +71,33 @@ export const Kategori: React.FC<KategoriProps> = ({ userRole }) => {
     try {
       if (isEdit && activeId) {
         await db.updateCategory(activeId, name, description);
+        showSuccessToast('Kategori berhasil diperbarui');
       } else {
         await db.createCategory(name, description);
+        showSuccessToast('Kategori baru berhasil ditambahkan');
       }
       setIsOpen(false);
       loadCategories();
-    } catch (err) {
-      alert('Gagal menyimpan kategori');
+    } catch (err: any) {
+      showAlert('Gagal Menyimpan', err.message || 'Gagal menyimpan kategori', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Yakin ingin menghapus kategori ini? Produk dalam kategori ini akan kehilangan relasinya.')) return;
-    try {
-      await db.deleteCategory(id);
-      loadCategories();
-    } catch (err) {
-      alert('Gagal menghapus kategori');
+    const result = await showConfirm(
+      'Hapus Kategori?',
+      'Yakin ingin menghapus kategori ini? Produk dalam kategori ini akan kehilangan relasinya.',
+      'Ya, Hapus',
+      'Batal'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.deleteCategory(id);
+        loadCategories();
+        showSuccessToast('Kategori berhasil dihapus');
+      } catch (err: any) {
+        showAlert('Gagal Menghapus', err.message || 'Gagal menghapus kategori', 'error');
+      }
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Supplier } from '../db';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface SupplierProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -72,23 +73,33 @@ export const SupplierPage: React.FC<SupplierProps> = ({ userRole }) => {
     try {
       if (isEdit && activeId) {
         await db.updateSupplier(activeId, name, phone, address);
+        showSuccessToast('Supplier berhasil diperbarui');
       } else {
         await db.createSupplier(name, phone, address);
+        showSuccessToast('Supplier baru berhasil ditambahkan');
       }
       setIsOpen(false);
       loadSuppliers();
-    } catch (err) {
-      alert('Gagal menyimpan supplier');
+    } catch (err: any) {
+      showAlert('Gagal Menyimpan', err.message || 'Gagal menyimpan supplier', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Yakin ingin menghapus supplier ini?')) return;
-    try {
-      await db.deleteSupplier(id);
-      loadSuppliers();
-    } catch (err) {
-      alert('Gagal menghapus supplier');
+    const result = await showConfirm(
+      'Hapus Supplier?',
+      'Apakah Anda yakin ingin menghapus supplier ini?',
+      'Ya, Hapus',
+      'Batal'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.deleteSupplier(id);
+        loadSuppliers();
+        showSuccessToast('Supplier berhasil dihapus');
+      } catch (err: any) {
+        showAlert('Gagal Menghapus', err.message || 'Gagal menghapus supplier', 'error');
+      }
     }
   };
 

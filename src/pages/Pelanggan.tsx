@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Customer } from '../db';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PelangganProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -75,27 +76,37 @@ export const PelangganPage: React.FC<PelangganProps> = ({ userRole }) => {
     try {
       if (isEdit && activeId) {
         await db.updateCustomer(activeId, name, phone, email, address);
+        showSuccessToast('Pelanggan berhasil diperbarui');
       } else {
         await db.createCustomer(name, phone, email, address);
+        showSuccessToast('Pelanggan baru berhasil ditambahkan');
       }
       setIsOpen(false);
       loadCustomers();
-    } catch (err) {
-      alert('Gagal menyimpan pelanggan');
+    } catch (err: any) {
+      showAlert('Gagal Menyimpan', err.message || 'Gagal menyimpan pelanggan', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (id === 'cust-general') {
-      alert('Pelanggan Umum tidak dapat dihapus');
+      showAlert('Aksi Ditolak', 'Pelanggan Umum bawaan sistem tidak dapat dihapus', 'warning');
       return;
     }
-    if (!window.confirm('Yakin ingin menghapus pelanggan ini?')) return;
-    try {
-      await db.deleteCustomer(id);
-      loadCustomers();
-    } catch (err) {
-      alert('Gagal menghapus pelanggan');
+    const result = await showConfirm(
+      'Hapus Pelanggan?',
+      'Apakah Anda yakin ingin menghapus data pelanggan ini?',
+      'Ya, Hapus',
+      'Batal'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.deleteCustomer(id);
+        loadCustomers();
+        showSuccessToast('Pelanggan berhasil dihapus');
+      } catch (err: any) {
+        showAlert('Gagal Menghapus', err.message || 'Gagal menghapus pelanggan', 'error');
+      }
     }
   };
 

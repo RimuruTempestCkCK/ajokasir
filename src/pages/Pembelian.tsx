@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Purchase, Supplier, Product, Profile } from '../db';
 import { Plus, Check, Truck, X, Eye } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PembelianProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -104,7 +105,7 @@ export const Pembelian: React.FC<PembelianProps> = ({ userRole, currentUser }) =
     // Validate
     const invalid = poItems.some(item => !item.productId || item.quantity <= 0 || item.price < 0);
     if (invalid) {
-      alert('Mohon lengkapi semua item barang, kuantitas, dan harga pembelian.');
+      showAlert('Input Tidak Valid', 'Mohon lengkapi semua item barang, kuantitas, dan harga pembelian.', 'warning');
       return;
     }
 
@@ -130,30 +131,47 @@ export const Pembelian: React.FC<PembelianProps> = ({ userRole, currentUser }) =
 
       setIsAddOpen(false);
       loadData();
-    } catch (err) {
-      alert('Gagal membuat purchase order');
+      showSuccessToast('Purchase Order berhasil dibuat');
+    } catch (err: any) {
+      showAlert('Gagal Membuat PO', err.message || 'Gagal membuat purchase order', 'error');
     }
   };
 
   const handleApprove = async (id: string) => {
-    if (!window.confirm('Setujui Purchase Order ini?')) return;
-    try {
-      await db.approvePurchase(id);
-      loadData();
-      setIsDetailOpen(false);
-    } catch (err) {
-      alert('Gagal menyetujui PO');
+    const result = await showConfirm(
+      'Setujui PO?',
+      'Apakah Anda yakin ingin menyetujui Purchase Order ini untuk masuk ke tahap pengadaan?',
+      'Ya, Setujui',
+      'Kembali'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.approvePurchase(id);
+        loadData();
+        setIsDetailOpen(false);
+        showSuccessToast('Purchase Order disetujui');
+      } catch (err: any) {
+        showAlert('Gagal Approval', err.message || 'Gagal menyetujui PO', 'error');
+      }
     }
   };
 
   const handleReceive = async (id: string) => {
-    if (!window.confirm('Konfirmasi penerimaan barang? Stok produk akan otomatis bertambah dan harga pokok terupdate.')) return;
-    try {
-      await db.receivePurchase(id);
-      loadData();
-      setIsDetailOpen(false);
-    } catch (err) {
-      alert('Gagal memproses penerimaan barang');
+    const result = await showConfirm(
+      'Konfirmasi Penerimaan?',
+      'Konfirmasi penerimaan barang? Stok produk bersangkutan di gudang akan otomatis bertambah dan harga pokok terupdate.',
+      'Ya, Terima',
+      'Kembali'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.receivePurchase(id);
+        loadData();
+        setIsDetailOpen(false);
+        showSuccessToast('Barang berhasil diterima & stok terupdate');
+      } catch (err: any) {
+        showAlert('Gagal Terima', err.message || 'Gagal memproses penerimaan barang', 'error');
+      }
     }
   };
 

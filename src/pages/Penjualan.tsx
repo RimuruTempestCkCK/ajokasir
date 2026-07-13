@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, Product, Customer, Category, Settings } from '../db';
 import { Search, ShoppingCart, Trash2, Printer, Plus, Minus, Check, X, CreditCard, ScanBarcode } from 'lucide-react';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PenjualanProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -105,12 +106,12 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
     const matchedProd = products.find(p => p.barcode === barcodeInput.trim());
     if (matchedProd) {
       if (matchedProd.stock === 0) {
-        alert(`Stok barang "${matchedProd.name}" habis!`);
+        showAlert('Stok Habis', `Stok barang "${matchedProd.name}" sudah habis!`, 'warning');
       } else {
         addToCart(matchedProd);
       }
     } else {
-      alert(`Barang dengan barcode "${barcodeInput}" tidak ditemukan`);
+      showAlert('Tidak Ditemukan', `Barang dengan barcode "${barcodeInput}" tidak ditemukan`, 'error');
     }
     setBarcodeInput('');
   };
@@ -120,7 +121,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
     const existing = cart.find(item => item.product.id === product.id);
     if (existing) {
       if (existing.quantity >= product.stock) {
-        alert(`Jumlah pembelian melebihi stok yang tersedia (${product.stock} ${product.unit})`);
+        showAlert('Stok Terbatas', `Jumlah pembelian melebihi stok yang tersedia (${product.stock} ${product.unit})`, 'warning');
         return;
       }
       setCart(cart.map(item => 
@@ -130,7 +131,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
       ));
     } else {
       if (product.stock <= 0) {
-        alert('Stok barang habis!');
+        showAlert('Stok Habis', 'Stok barang ini sudah habis!', 'warning');
         return;
       }
       setCart([...cart, { product, quantity: 1 }]);
@@ -148,7 +149,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
     }
 
     if (newQty > item.product.stock) {
-      alert(`Stok tidak mencukupi. Maksimal stok: ${item.product.stock}`);
+      showAlert('Stok Terbatas', `Stok tidak mencukupi. Maksimal stok: ${item.product.stock}`, 'warning');
       return;
     }
 
@@ -174,7 +175,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
   const handleCheckout = async () => {
     if (cart.length === 0) return;
     if (paymentMethod === 'cash' && cashPaid < total) {
-      alert('Uang pembayaran kurang!');
+      showAlert('Pembayaran Kurang', 'Jumlah uang tunai yang dibayarkan kurang dari total belanja!', 'warning');
       return;
     }
 
@@ -206,8 +207,9 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
       setCompletedTx(newTx);
       setIsReceiptOpen(true);
       clearCart();
+      showSuccessToast('Transaksi berhasil diproses');
     } catch (err: any) {
-      alert(err.message || 'Gagal memproses transaksi');
+      showAlert('Gagal Transaksi', err.message || 'Gagal memproses transaksi', 'error');
     }
   };
 

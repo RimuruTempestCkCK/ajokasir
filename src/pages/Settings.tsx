@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, Settings } from '../db';
 import { Store, Percent, Phone, MapPin, Save, ShieldAlert } from 'lucide-react';
+import { showAlert, showSuccessToast } from '../utils/swal';
 
 interface SettingsProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -48,7 +49,6 @@ export const SettingsPage: React.FC<SettingsProps> = ({ userRole }) => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(false);
     try {
       await db.updateSettings({
         shop_name: shopName,
@@ -56,10 +56,9 @@ export const SettingsPage: React.FC<SettingsProps> = ({ userRole }) => {
         shop_phone: shopPhone,
         tax_percentage: Number(taxPercentage)
       });
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      alert('Gagal menyimpan pengaturan');
+      showSuccessToast('Pengaturan toko berhasil disimpan');
+    } catch (err: any) {
+      showAlert('Gagal Menyimpan', err.message || 'Gagal menyimpan pengaturan toko', 'error');
     }
   };
 
@@ -76,21 +75,6 @@ export const SettingsPage: React.FC<SettingsProps> = ({ userRole }) => {
         <div style={{ padding: '40px', textAlign: 'center' }}>Memuat pengaturan...</div>
       ) : (
         <div className="card" style={{ maxWidth: '600px' }}>
-          {success && (
-            <div style={{
-              backgroundColor: 'var(--success-pale)',
-              color: 'var(--success-deep)',
-              padding: '12px',
-              borderRadius: '12px',
-              fontSize: '14px',
-              fontWeight: 600,
-              marginBottom: '20px',
-              border: '1px solid #a7f3d0'
-            }}>
-              ✓ Pengaturan toko berhasil disimpan!
-            </div>
-          )}
-
           <form onSubmit={handleSave}>
             <div className="form-group">
               <label className="form-label">Nama Toko / Bisnis</label>

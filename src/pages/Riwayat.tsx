@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { db, Transaction, Customer, Profile } from '../db';
 import { Search, Eye, XCircle, RefreshCw, Printer, X } from 'lucide-react';
+import Swal from 'sweetalert2';
+import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface RiwayatProps {
   userRole: 'owner' | 'kasir' | 'gudang';
@@ -55,29 +57,53 @@ export const Riwayat: React.FC<RiwayatProps> = ({ userRole }) => {
   };
 
   const handleCancelTx = async (id: string) => {
-    if (!window.confirm('Apakah Anda yakin ingin membatalkan transaksi ini? Stok barang akan dikembalikan.')) return;
-    try {
-      await db.cancelTransaction(id);
-      loadData();
-      setIsDetailOpen(false);
-    } catch (err: any) {
-      alert(err.message || 'Gagal membatalkan transaksi');
+    const result = await showConfirm(
+      'Batalkan Transaksi?',
+      'Apakah Anda yakin ingin membatalkan transaksi ini? Semua stok barang yang dibeli akan dikembalikan.',
+      'Ya, Batalkan',
+      'Kembali'
+    );
+    if (result.isConfirmed) {
+      try {
+        await db.cancelTransaction(id);
+        loadData();
+        setIsDetailOpen(false);
+        showSuccessToast('Transaksi berhasil dibatalkan');
+      } catch (err: any) {
+        showAlert('Gagal Batal', err.message || 'Gagal membatalkan transaksi', 'error');
+      }
     }
   };
 
   const handleReturnTx = async (id: string) => {
-    const reason = window.prompt('Masukkan alasan retur barang:');
-    if (reason === null) return; // cancelled prompt
-    if (!reason.trim()) {
-      alert('Alasan retur harus diisi!');
-      return;
-    }
-    try {
-      await db.returnTransaction(id, reason);
-      loadData();
-      setIsDetailOpen(false);
-    } catch (err: any) {
-      alert(err.message || 'Gagal meretur transaksi');
+    const { value: reason } = await Swal.fire({
+      title: 'Alasan Retur Barang',
+      input: 'text',
+      inputLabel: 'Masukkan alasan retur produk ini:',
+      inputPlaceholder: 'Contoh: Barang rusak / Salah beli...',
+      showCancelButton: true,
+      confirmButtonColor: '#f43f5e', // Rose
+      cancelButtonColor: '#64748b',  // Slate
+      confirmButtonText: 'Proses Retur',
+      cancelButtonText: 'Batal',
+      background: '#ffffff',
+      color: '#0f172a',
+      inputValidator: (value) => {
+        if (!value || !value.trim()) {
+          return 'Alasan retur harus diisi!';
+        }
+      }
+    });
+
+    if (reason) {
+      try {
+        await db.returnTransaction(id, reason);
+        loadData();
+        setIsDetailOpen(false);
+        showSuccessToast('Transaksi berhasil diretur');
+      } catch (err: any) {
+        showAlert('Gagal Retur', err.message || 'Gagal meretur transaksi', 'error');
+      }
     }
   };
 
