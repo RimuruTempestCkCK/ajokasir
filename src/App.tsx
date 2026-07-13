@@ -60,6 +60,47 @@ function App() {
 
   useEffect(() => {
     checkUserSession();
+
+    // Proteksi Keamanan Frontend (Anti Maling Source Code / Gambar)
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const handleDragStart = (e: DragEvent) => {
+      // Mencegah penyeretan gambar (drag-and-drop) ke luar browser/desktop
+      if ((e.target as HTMLElement).tagName === 'IMG') {
+        e.preventDefault();
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Mencegah F12 (Inspect Element)
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+      // Mencegah Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J (Developer Tools)
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c' || e.key === 'J' || e.key === 'j')) {
+        e.preventDefault();
+      }
+      // Mencegah Ctrl+U (Melihat Source Code Mentah)
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+        e.preventDefault();
+      }
+      // Mencegah Ctrl+S (Menyimpan Halaman Web secara lokal)
+      if (e.ctrlKey && (e.key === 'S' || e.key === 's')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('dragstart', handleDragStart);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleLoginSuccess = async () => {
