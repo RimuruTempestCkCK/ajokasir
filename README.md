@@ -1,6 +1,6 @@
-# AjoKasir - Sistem POS & Manajemen Inventori
+# AjoKasir - Sistem POS & Manajemen Inventori (Multi-Store & Cloud Sync)
 
-AjoKasir adalah aplikasi Point of Sale (POS) dan Manajemen Inventori berbasis web modern, ringan, dan responsif. Aplikasi ini dirancang untuk membantu pemilik usaha (UMKM) dalam mengelola proses penjualan kasir, pembelian ke supplier, penyesuaian stok barang, serta pemantauan laporan keuangan bisnis secara *real-time*.
+AjoKasir adalah aplikasi Point of Sale (POS) dan Manajemen Inventori berbasis web modern, ringan, responsif, dan kaya fitur. Aplikasi ini dirancang untuk mendukung manajemen jaringan toko kelontong atau ritel (Multi-Store) baik pada tingkat operasional cabang maupun tingkat pengawasan korporat secara *real-time*.
 
 Aplikasi ini menggunakan arsitektur **Hybrid Cloud**, di mana data disinkronisasikan secara otomatis ke **Supabase (Cloud)** jika terhubung, dan memiliki fitur fallback otomatis ke **LocalStorage (Demo Mode)** jika kredensial Supabase tidak dikonfigurasi.
 
@@ -10,52 +10,89 @@ Repository GitHub: [https://github.com/RimuruTempestCkCK/ajokasir](https://githu
 
 ## 🚀 Fitur Utama
 
-1. **Role-Based Access Control (RBAC)**: Pembatasan hak akses menu berdasarkan peran pengguna (**Owner, Kasir, Gudang**).
-2. **Kasir POS (Point of Sale)**:
+1. **Multi-Store Management & Super Admin Panel**:
+   - Akun khusus **Super Admin** untuk memantau performa bisnis di semua cabang toko.
+   - Manajemen Cabang Toko (Daftar Toko) dan Akun Pemilik (Kelola Owner).
+   - Penjelajahan Detail Toko: Masuk ke cabang manapun langsung dari daftar toko untuk memantau inventori, transaksi, karyawan, dan setelan toko tersebut secara terisolasi.
+2. **Dashboard Visual Profesional Per Aktor**:
+   - **Super Admin**: Grafik kontribusi omzet antar cabang toko dan statistik pertumbuhan mitra.
+   - **Owner**: Grafik penjualan 7 hari terakhir, distribusi kategori terlaris, dan grafik jam sibuk toko (*peak hours*).
+   - **Kasir**: Progress pencapaian target harian kasir dan rasio metode pembayaran (Tunai vs QRIS).
+   - **Gudang**: Grafik alokasi kesehatan stok barang (Aman, Kritis, Kosong) dan grafik status pengiriman Purchase Order (PO).
+3. **Role-Based Access Control (RBAC)**: Pembatasan hak akses menu berdasarkan peran pengguna (**Super Admin, Owner, Kasir, Gudang**).
+4. **Kasir POS (Point of Sale)**:
    - Pencarian barang dinamis & support barcode scanner (menggunakan input barcode khusus).
    - Perhitungan diskon dan pajak (PPN) otomatis.
    - Pilihan metode pembayaran yang variatif: Tunai (Cash), QRIS, dan Transfer Bank.
    - Cetak struk belanja (Receipt) dalam format thermal printer 80mm.
-   - Layangan ramah mobile dengan sistem tab navigasi produk vs keranjang.
-3. **Manajemen Inventori (Master Barang)**:
+5. **Manajemen Inventori (Master Barang)**:
    - Pengelolaan data barang, kategori barang, supplier, dan pelanggan.
    - Warning/alarm otomatis jika stok barang hampir habis (mencapai batas minimum stok).
    - Log histori mutasi stok (Barang Masuk, Barang Keluar, Penjualan, Purchase Order).
-4. **Stock Opname**:
+6. **Stock Opname & Purchase Order (PO)**:
    - Penyesuaian stok fisik gudang dengan stok sistem disertai catatan alasan.
-5. **Purchase Order (PO) Supplier**:
-   - Pembuatan PO belanja barang ke supplier.
-   - Alur penerimaan barang PO secara bertahap (Pending -> Received) yang otomatis menambahkan stok barang bersangkutan ketika diterima.
-6. **Laporan Bisnis & Keuangan (Owner)**:
-   - Laporan Penjualan (Harian, Bulanan, Tahunan).
-   - Laporan Laba Rugi Bersih (setelah dipotong COGS/harga pokok dan pajak).
-   - Laporan 10 Barang Terlaris.
-   - Laporan Nilai Aset Inventori Gudang saat ini.
+   - Alur penerimaan barang PO secara bertahap (Pending -> Received) yang otomatis menambahkan stok barang ketika diterima.
+7. **Laporan Bisnis & Keuangan (Owner & Super Admin)**:
+   - Laporan Laba Rugi Bersih (setelah dipotong COGS/harga pokok dan pajak) dan Nilai Aset Inventori Gudang saat ini.
 
 ---
 
 ## 👥 Hak Akses Pengguna (RBAC)
 
-| Menu / Halaman | Owner | Kasir | Gudang | Keterangan |
-| :--- | :---: | :---: | :---: | :--- |
-| **Dashboard** | ✅ | ✅ | ✅ | Tampilan disesuaikan dengan peran |
-| **Kasir POS** | ✅ | ✅ | 👁️ | Gudang hanya bisa melihat menu produk |
-| **Master Barang** | ✅ | 👁️ | ✅ | Kasir hanya bisa melihat daftar & harga |
-| **Kategori Barang**| ✅ | ❌ | 👁️ | Kasir tidak memiliki akses |
-| **Data Supplier** | ✅ | ❌ | ✅ | Mengelola database supplier barang |
-| **Data Pelanggan** | ✅ | ✅ | ❌ | Terintegrasi dengan diskon member POS |
-| **Purchase Order** | ✅ | ❌ | ✅ | Gudang membuat PO, Owner memberi approval |
-| **Histori Stok** | ✅ | 👁️ | ✅ | Melacak riwayat mutasi stok |
-| **Laporan Keuangan**| ✅ | Terbatas| Terbatas| Owner melihat Laba Rugi & Aset |
-| **Kelola Karyawan** | ✅ | ❌ | ❌ | Hanya Owner yang bisa menambah akun staff |
-| **Pengaturan Toko** | ✅ | ❌ | ❌ | Mengatur Nama Toko, Alamat, dan Pajak |
+| Menu / Halaman | Super Admin | Owner | Kasir | Gudang | Keterangan |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Dashboard** | ✅ | ✅ | ✅ | ✅ | Tampilan grafik & chart disesuaikan per peran |
+| **Daftar Toko** | ✅ | ❌ | ❌ | ❌ | Mengelola pendaftaran & masuk ke detail toko cabang |
+| **Kelola Owner** | ✅ | ❌ | ❌ | ❌ | Registrasi akun owner toko cabang |
+| **Kasir POS** | ❌ | ✅ | ✅ | 👁️ | Super Admin & Gudang tidak memiliki akses transaksi |
+| **Master Barang** | 👁️ (Detail) | ✅ | 👁️ | ✅ | Kasir hanya bisa melihat daftar & harga barang |
+| **Kategori Barang**| 👁️ (Detail) | ✅ | ❌ | ✅ | Kasir tidak memiliki akses |
+| **Data Supplier** | 👁️ (Detail) | ✅ | ❌ | ✅ | Mengelola database supplier barang |
+| **Data Pelanggan** | 👁️ (Detail) | ✅ | ✅ | ❌ | Terintegrasi dengan diskon member POS |
+| **Purchase Order** | 👁️ (Detail) | ✅ | ❌ | ✅ | Gudang membuat PO, Owner memberi approval |
+| **Histori Stok** | 👁️ (Detail) | ✅ | 👁️ | ✅ | Melacak riwayat mutasi stok |
+| **Laporan Keuangan**| 👁️ (Detail) | ✅ | Terbatas| Terbatas| Owner melihat Laba Rugi & Aset |
+| **Kelola Karyawan** | ✅ (Detail) | ✅ | ❌ | ❌ | Mengelola akun karyawan (Kasir/Gudang) per cabang |
+| **Pengaturan Toko** | ✅ (Detail) | ✅ | ❌ | ❌ | Mengatur Nama Toko, Alamat, dan Pajak |
+| **Profil Saya** | ✅ | ✅ | ✅ | ✅ | Mengubah sandi & profil personal |
+
+*Catatan: **✅ (Detail)** berarti Super Admin dapat mengakses dan mengelola data tersebut dengan cara masuk ke detail toko terpilih di halaman **Daftar Toko**.*
+
+---
+
+## 💻 Akun Pengujian Default (Seeding Data)
+
+Di dalam file database seeding, terdapat **2 cabang toko** (*AjoKasir Mart* di Padang dan *Ajo Minang Swalayan* di Bukittinggi) serta **7 akun default** untuk mempermudah pengujian. Password disamakan dengan alamat email masing-masing:
+
+| Akun Pengguna | Email | Password | Asosiasi Toko |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `superadmin@ajokasir.com` | `superadmin@ajokasir.com` | Global (Semua Toko) |
+| **Owner Toko 1** | `owner@ajokasir.com` | `owner@ajokasir.com` | Toko 1 (Padang) |
+| **Kasir Toko 1** | `kasir@ajokasir.com` | `kasir@ajokasir.com` | Toko 1 (Padang) |
+| **Staf Gudang Toko 1** | `gudang@ajokasir.com` | `gudang@ajokasir.com` | Toko 1 (Padang) |
+| **Owner Toko 2** | `owner2@ajokasir.com` | `owner2@ajokasir.com` | Toko 2 (Bukittinggi) |
+| **Kasir Toko 2** | `kasir2@ajokasir.com` | `kasir2@ajokasir.com` | Toko 2 (Bukittinggi) |
+| **Staf Gudang Toko 2** | `gudang2@ajokasir.com` | `gudang2@ajokasir.com` | Toko 2 (Bukittinggi) |
+
+---
+
+## 📂 Arsitektur Kode Utama
+
+- **`src/layouts/AppLayout.tsx`**: Layout shell aplikasi (Sidebar & Hamburger Drawer responsif).
+- **`src/components/dashboard/`**:
+  - `SuperAdminDashboard.tsx`: Dashboard analisis grafik kontribusi omzet korporat.
+  - `OwnerDashboard.tsx`: Dashboard finansial, kategori produk terlaris, dan grafik jam sibuk toko.
+  - `KasirDashboard.tsx`: Dashboard target penjualan harian dan metode pembayaran.
+  - `GudangDashboard.tsx`: Dashboard kesehatan stok barang dan status pengapalan PO.
+- **`src/pages/StoreDetail.tsx`**: Halaman multi-tab yang membungkus semua detail data operasional toko cabang untuk diinspeksi oleh Super Admin.
+- **`src/db.ts`**: Database Adapter (Menyediakan API integrasi LocalStorage/Supabase PostgreSQL).
 
 ---
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 19, TypeScript, Vite (Build Tool), Lucide React (Icons).
-- **Styling**: Custom CSS (Responsive Grid & Drawer Layout).
+- **Styling**: Vanilla CSS (Responsive Grid, Cards, & Sidebar Drawer Layout).
 - **Backend & Database**: Supabase (PostgreSQL, GoTrue Auth, Row Level Security).
 
 ---
@@ -102,33 +139,11 @@ Untuk menghubungkan aplikasi ini ke Supabase secara utuh, ikuti konfigurasi data
 ### 1. Inisialisasi Tabel
 Buka **Supabase Dashboard > SQL Editor**, buat **New Query**, tempel seluruh kode dari berkas [`supabase_setup.sql`](supabase_setup.sql) yang ada di folder root proyek ini, kemudian klik **Run**.
 Ini akan membuat:
-- Tabel `profiles`, `categories`, `products`, `suppliers`, `customers`, `transactions`, `transaction_items`, `purchases`, `purchase_items`, `stock_logs`, dan `settings`.
-- Triggers otomatis untuk penyesuaian stok (penjualan memotong stok, retur/pembatalan mengembalikan stok, dan penerimaan PO menambahkan stok).
+- Tabel database, trigger sinkronisasi otomatis stok, serta trigger pembaruan profil pengguna (`auth.users`).
+- RLS Policies aman yang mencegah kebocoran data antar cabang toko, serta fungsi `public.get_user_role` bypass dengan mode security definer.
 
 ### 2. Nonaktifkan Konfirmasi Email (Sangat Penting)
-Supaya Anda bisa mendaftarkan akun karyawan (Kasir & Gudang) menggunakan email dummy (seperti `kasir@ajokasir.com`) langsung dari aplikasi tanpa perlu melakukan verifikasi tautan email:
-1. Masuk ke **Supabase Dashboard > Authentication > Sign In / Providers**.
-2. Klik provider **Email**.
-3. Matikan sakelar **Confirm email** menjadi **OFF**.
-4. Klik **Save**.
-
-### 3. Catatan Penting untuk Mengatasi Error Login 500
-Jika Anda mendapati error status `500` (`"Database error querying schema"`) saat mencoba login dengan akun kasir/gudang yang baru dibuat, itu terjadi karena adanya kolom bernilai `NULL` di tabel bawaan `auth.users`. 
-
-Atasi dengan menjalankan query SQL ini sekali di **SQL Editor** Supabase:
-```sql
-UPDATE auth.users
-SET 
-  confirmation_token = COALESCE(confirmation_token, ''),
-  email_change_token_new = COALESCE(email_change_token_new, ''),
-  email_change = COALESCE(email_change, ''),
-  recovery_token = COALESCE(recovery_token, ''),
-  phone_change_token = COALESCE(phone_change_token, ''),
-  email_change_token_current = COALESCE(email_change_token_current, '');
-```
-
----
-
-## 📄 Lisensi
-
-Proyek ini dibangun untuk tujuan membantu operasional toko kelontong dan manajemen usaha mikro. Anda bebas memodifikasi dan membagikannya kembali.
+Supaya Anda bisa mendaftarkan akun karyawan (Kasir & Gudang) menggunakan email dummy langsung dari aplikasi tanpa perlu melakukan verifikasi tautan email:
+1. Masuk ke **Supabase Dashboard > Authentication > Providers > Email**.
+2. Matikan sakelar **Confirm email** menjadi **OFF**.
+3. Klik **Save**.
