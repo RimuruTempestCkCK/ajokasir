@@ -151,7 +151,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </button>
         </form>
 
-        <div style={{ margin: '24px 0 16px 0', position: 'relative', textAlign: 'center' }}>
+        {/* <div style={{ margin: '24px 0 16px 0', position: 'relative', textAlign: 'center' }}>
           <div style={{
             position: 'absolute',
             top: '50%',
@@ -211,7 +211,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <span>Uda Buyung (Gudang)</span>
             <span style={{ fontSize: '11px', color: 'var(--mute)' }}>gudang@ajokasir.com</span>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
