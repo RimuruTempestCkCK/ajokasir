@@ -38,7 +38,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
   const handleQuickLogin = (roleEmail: string) => {
     setEmail(roleEmail);
-    setPassword('admin123'); // seed password length >= 6
+    setPassword(roleEmail); 
   };
 
   return (
@@ -151,14 +151,14 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </button>
         </form>
 
-        {/* <div style={{ margin: '24px 0 16px 0', position: 'relative', textAlign: 'center' }}>
+        <div style={{ margin: '24px 0 16px 0', position: 'relative', textAlign: 'center' }}>
           <div style={{
             position: 'absolute',
             top: '50%',
             left: 0,
             right: 0,
             height: '1px',
-            backgroundColor: 'var(--hairline-soft)',
+            background: 'var(--hairline-soft)',
             zIndex: 1
           }}></div>
           <span style={{
@@ -174,8 +174,18 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
           </span>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px' }}>
           <button
+            type="button"
+            onClick={() => handleQuickLogin('superadmin@ajokasir.com')}
+            className="btn btn-secondary"
+            style={{ justifyContent: 'space-between', padding: '10px 16px' }}
+          >
+            <span>Super Admin</span>
+            <span style={{ fontSize: '11px', color: 'var(--mute)' }}>superadmin@ajokasir.com</span>
+          </button>
+          <button
+            type="button"
             onClick={() => handleQuickLogin('owner@ajokasir.com')}
             className="btn btn-secondary"
             style={{ justifyContent: 'space-between', padding: '10px 16px' }}
@@ -184,6 +194,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <span style={{ fontSize: '11px', color: 'var(--mute)' }}>owner@ajokasir.com</span>
           </button>
           <button
+            type="button"
             onClick={() => handleQuickLogin('kasir@ajokasir.com')}
             className="btn btn-secondary"
             style={{ justifyContent: 'space-between', padding: '10px 16px' }}
@@ -192,6 +203,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <span style={{ fontSize: '11px', color: 'var(--mute)' }}>kasir@ajokasir.com</span>
           </button>
           <button
+            type="button"
             onClick={() => handleQuickLogin('gudang@ajokasir.com')}
             className="btn btn-secondary"
             style={{ justifyContent: 'space-between', padding: '10px 16px' }}
@@ -199,7 +211,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             <span>Uda Buyung (Gudang)</span>
             <span style={{ fontSize: '11px', color: 'var(--mute)' }}>gudang@ajokasir.com</span>
           </button>
-        </div> */}
+        </div>
       </div>
     </div>
   );

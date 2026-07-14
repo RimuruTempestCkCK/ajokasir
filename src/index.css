@@ -1049,6 +1049,20 @@ a:hover {
   display: none;
 }
 
+/* Responsive Grid Utility */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+}
+
 /* Printing styles for Receipt */
 @media print {
   body * {

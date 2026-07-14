@@ -13,7 +13,7 @@ import {
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface BarangProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Barang: React.FC<BarangProps> = ({ userRole }) => {
@@ -43,7 +43,7 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
   const [newStockVal, setNewStockVal] = useState(0);
   const [opnameReason, setOpnameReason] = useState('');
 
-  const canManage = userRole === 'owner' || userRole === 'gudang';
+  const canManage = userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin';
 
   const loadData = async () => {
     try {
@@ -337,7 +337,7 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
                   ))}
                 </select>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="grid-2" style={{ gap: '12px' }}>
                 <div className="form-group">
                   <label className="form-label">Harga Pokok (Modal)</label>
                   <input type="number" className="form-input" value={costPrice} onChange={(e) => setCostPrice(Number(e.target.value))} required />
@@ -347,7 +347,7 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
                   <input type="number" className="form-input" value={price} onChange={(e) => setPrice(Number(e.target.value))} required />
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="grid-2" style={{ gap: '12px' }}>
                 <div className="form-group">
                   <label className="form-label">Stok Awal</label>
                   <input type="number" className="form-input" value={stock} onChange={(e) => setStock(Number(e.target.value))} required />
@@ -394,7 +394,7 @@ export const Barang: React.FC<BarangProps> = ({ userRole }) => {
                   ))}
                 </select>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="grid-2" style={{ gap: '12px' }}>
                 <div className="form-group">
                   <label className="form-label">Harga Pokok (Modal)</label>
                   <input type="number" className="form-input" value={costPrice} onChange={(e) => setCostPrice(Number(e.target.value))} required />

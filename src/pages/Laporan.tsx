@@ -3,7 +3,7 @@ import { db, Transaction, Product, Category, StockLog, Purchase } from '../db';
 import { BarChart, FileText, ShoppingBag, DollarSign, Activity } from 'lucide-react';
 
 interface LaporanProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
@@ -164,7 +164,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
 
       {/* TABS NAVIGATION */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid var(--hairline-soft)', paddingBottom: '12px', flexWrap: 'wrap' }}>
-        {(userRole === 'owner' || userRole === 'kasir') && (
+        {(userRole === 'owner' || userRole === 'kasir' || userRole === 'super_admin') && (
           <button 
             className={`chip ${activeTab === 'penjualan' ? 'active' : ''}`}
             onClick={() => setActiveTab('penjualan')}
@@ -174,7 +174,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
           </button>
         )}
         
-        {userRole === 'owner' && (
+        {(userRole === 'owner' || userRole === 'super_admin') && (
           <button 
             className={`chip ${activeTab === 'labarugi' ? 'active' : ''}`}
             onClick={() => setActiveTab('labarugi')}
@@ -184,7 +184,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
           </button>
         )}
 
-        {(userRole === 'owner' || userRole === 'kasir') && (
+        {(userRole === 'owner' || userRole === 'kasir' || userRole === 'super_admin') && (
           <button 
             className={`chip ${activeTab === 'terlaris' ? 'active' : ''}`}
             onClick={() => setActiveTab('terlaris')}
@@ -194,7 +194,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
           </button>
         )}
 
-        {(userRole === 'owner' || userRole === 'gudang') && (
+        {(userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin') && (
           <button 
             className={`chip ${activeTab === 'stok' ? 'active' : ''}`}
             onClick={() => setActiveTab('stok')}
@@ -271,7 +271,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
       )}
 
       {/* 2. PROFIT & LOSS TAB */}
-      {activeTab === 'labarugi' && userRole === 'owner' && (
+      {activeTab === 'labarugi' && (userRole === 'owner' || userRole === 'super_admin') && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             <div className="stat-card">
@@ -306,7 +306,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
               Perhitungan Laba Bersih dihitung dengan rumus berikut:<br />
               <strong style={{ color: 'var(--primary)' }}>Laba Bersih = Total Penerimaan (Omzet) - Harga Pokok Penjualan (COGS) - Pajak PPN</strong>
             </p>
-            <div style={{ marginTop: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="grid-2" style={{ marginTop: '16px', gap: '20px' }}>
               <div className="card-soft">
                 <strong style={{ fontSize: '15px' }}>Total Pemasukan Kotor:</strong>
                 <p style={{ fontSize: '20px', fontWeight: 700, marginTop: '8px', color: 'var(--ink)' }}>Rp {pl.revenue.toLocaleString('id-ID')}</p>
@@ -378,7 +378,7 @@ export const Laporan: React.FC<LaporanProps> = ({ userRole }) => {
                 <span className="stat-label">Nilai Aset (Harga Jual)</span>
               </div>
             </div>
-            {userRole === 'owner' && (
+            {(userRole === 'owner' || userRole === 'super_admin') && (
               <div className="stat-card" style={{ backgroundColor: 'var(--success-pale)' }}>
                 <div className="stat-info">
                   <span className="stat-value" style={{ color: 'green' }}>Rp {inventorySummary.potentialProfit.toLocaleString('id-ID')}</span>

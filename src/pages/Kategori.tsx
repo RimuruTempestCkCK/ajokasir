@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface KategoriProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Kategori: React.FC<KategoriProps> = ({ userRole }) => {
@@ -21,8 +21,8 @@ export const Kategori: React.FC<KategoriProps> = ({ userRole }) => {
   const [description, setDescription] = useState('');
 
   // RBAC checks
-  const hasAccess = userRole === 'owner' || userRole === 'gudang';
-  const canManage = userRole === 'owner'; // Only Owner can CRUD Kategori, Gudang can only view (👁️)
+  const hasAccess = userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin';
+  const canManage = userRole === 'owner' || userRole === 'super_admin'; // Only Owner/Super Admin can CRUD Kategori
 
   const loadCategories = async () => {
     try {

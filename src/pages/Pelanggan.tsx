@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PelangganProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const PelangganPage: React.FC<PelangganProps> = ({ userRole }) => {
@@ -23,7 +23,7 @@ export const PelangganPage: React.FC<PelangganProps> = ({ userRole }) => {
   const [address, setAddress] = useState('');
 
   // RBAC checks
-  const hasAccess = userRole === 'owner' || userRole === 'kasir';
+  const hasAccess = userRole === 'owner' || userRole === 'kasir' || userRole === 'super_admin';
 
   const loadCustomers = async () => {
     try {

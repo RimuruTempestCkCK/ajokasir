@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, X, Shield, Mail, User } from 'lucide-react';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PenggunaProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Pengguna: React.FC<PenggunaProps> = ({ userRole }) => {
@@ -20,11 +20,11 @@ export const Pengguna: React.FC<PenggunaProps> = ({ userRole }) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'owner' | 'kasir' | 'gudang'>('kasir');
+  const [role, setRole] = useState<'super_admin' | 'owner' | 'kasir' | 'gudang'>('kasir');
   const [password, setPassword] = useState('');
 
-  // RBAC check
-  const isOwner = userRole === 'owner';
+  // RBAC check: Only Owner and Super Admin can manage employees
+  const isOwner = userRole === 'owner' || userRole === 'super_admin';
 
   const loadUsers = async () => {
     try {

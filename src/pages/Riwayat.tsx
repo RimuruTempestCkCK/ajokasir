@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface RiwayatProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Riwayat: React.FC<RiwayatProps> = ({ userRole }) => {
@@ -24,7 +24,7 @@ export const Riwayat: React.FC<RiwayatProps> = ({ userRole }) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
 
-  const canCancelOrReturn = userRole === 'owner';
+  const canCancelOrReturn = userRole === 'owner' || userRole === 'super_admin';
 
   const loadData = async () => {
     try {
@@ -253,7 +253,7 @@ export const Riwayat: React.FC<RiwayatProps> = ({ userRole }) => {
               <strong style={{ textTransform: 'capitalize' }}>{activeTx.status}</strong>
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px', fontSize: '13px', backgroundColor: 'var(--surface-card)', padding: '14px', borderRadius: '12px' }}>
+            <div className="grid-2" style={{ gap: '16px', marginBottom: '20px', fontSize: '13px', backgroundColor: 'var(--surface-card)', padding: '14px', borderRadius: '12px' }}>
               <div>
                 <div style={{ color: 'var(--mute)' }}>Kasir</div>
                 <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{activeTx.cashier_name}</div>

@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface SupplierProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const SupplierPage: React.FC<SupplierProps> = ({ userRole }) => {
@@ -22,7 +22,7 @@ export const SupplierPage: React.FC<SupplierProps> = ({ userRole }) => {
   const [address, setAddress] = useState('');
 
   // RBAC checks
-  const hasAccess = userRole === 'owner' || userRole === 'gudang';
+  const hasAccess = userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin';
 
   const loadSuppliers = async () => {
     try {

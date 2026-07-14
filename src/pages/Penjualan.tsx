@@ -4,7 +4,7 @@ import { Search, ShoppingCart, Trash2, Printer, Plus, Minus, Check, X, CreditCar
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PenjualanProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
   currentUser: any;
 }
 
@@ -47,7 +47,7 @@ export const Penjualan: React.FC<PenjualanProps> = ({ userRole, currentUser }) =
 
   const barcodeRef = useRef<HTMLInputElement>(null);
 
-  // RBAC check: Gudang cannot sell
+  // RBAC check: Gudang and Super Admin cannot sell
   const hasAccess = userRole === 'owner' || userRole === 'kasir';
 
   const loadData = async () => {

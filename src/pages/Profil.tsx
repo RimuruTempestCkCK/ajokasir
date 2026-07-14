@@ -52,7 +52,7 @@ export const Profil: React.FC<ProfilProps> = ({ currentUser }) => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'flex-start' }}>
+      <div className="grid-2" style={{ alignItems: 'flex-start' }}>
         
         {/* Profile Card */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

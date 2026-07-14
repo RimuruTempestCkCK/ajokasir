@@ -3,7 +3,7 @@ import { db, StockLog } from '../db';
 import { Search } from 'lucide-react';
 
 interface StokProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const Stok: React.FC<StokProps> = ({ userRole }) => {

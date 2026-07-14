@@ -4,7 +4,7 @@ import { Store, Percent, Phone, MapPin, Save, ShieldAlert } from 'lucide-react';
 import { showAlert, showSuccessToast } from '../utils/swal';
 
 interface SettingsProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
 }
 
 export const SettingsPage: React.FC<SettingsProps> = ({ userRole }) => {

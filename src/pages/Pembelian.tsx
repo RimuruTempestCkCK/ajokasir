@@ -4,7 +4,7 @@ import { Plus, Check, Truck, X, Eye } from 'lucide-react';
 import { showAlert, showConfirm, showSuccessToast } from '../utils/swal';
 
 interface PembelianProps {
-  userRole: 'owner' | 'kasir' | 'gudang';
+  userRole: 'super_admin' | 'owner' | 'kasir' | 'gudang';
   currentUser: Profile | null;
 }
 
@@ -30,9 +30,9 @@ export const Pembelian: React.FC<PembelianProps> = ({ userRole, currentUser }) =
   const [poItems, setPoItems] = useState<POItemInput[]>([{ productId: '', quantity: 1, price: 0 }]);
 
   // RBAC checks
-  const hasAccess = userRole === 'owner' || userRole === 'gudang';
-  const canApprove = userRole === 'owner';
-  const canReceive = userRole === 'owner' || userRole === 'gudang';
+  const hasAccess = userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin';
+  const canApprove = userRole === 'owner' || userRole === 'super_admin';
+  const canReceive = userRole === 'owner' || userRole === 'gudang' || userRole === 'super_admin';
 
   const loadData = async () => {
     try {
@@ -353,7 +353,7 @@ export const Pembelian: React.FC<PembelianProps> = ({ userRole, currentUser }) =
               <strong style={{ textTransform: 'capitalize' }}>{activePo.status}</strong>
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px', fontSize: '13px', backgroundColor: 'var(--surface-card)', padding: '14px', borderRadius: '12px' }}>
+            <div className="grid-2" style={{ gap: '16px', marginBottom: '20px', fontSize: '13px', backgroundColor: 'var(--surface-card)', padding: '14px', borderRadius: '12px' }}>
               <div>
                 <div style={{ color: 'var(--mute)' }}>Pemasok / Supplier</div>
                 <div style={{ fontWeight: 700, color: 'var(--ink)' }}>{activePo.supplier_name}</div>
